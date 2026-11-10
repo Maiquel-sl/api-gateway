@@ -9,27 +9,32 @@ spring:
       routes:
         # 1. Customer Service Route
         - id: customer-service-route
-          uri: ${CUSTOMER_SERVICE_URL:http://localhost:8081}
+          uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/api/customers/**
 
         # 2. Account Service Route
         - id: account-service-route
-          uri: ${ACCOUNT_SERVICE_URL:http://localhost:8082}
+          uri: lb://ACCOUNT-SERVICE
           predicates:
             - Path=/api/accounts/**
 
         # 3. Credit Service Route
         - id: credit-service-route
-          uri: ${CREDIT_SERVICE_URL:http://localhost:8083}
+          uri: lb://CREDIT-SERVICE
           predicates:
             - Path=/api/credits/**
 
         # 4. Transaction Service Route
         - id: transaction-service-route
-          uri: ${TRANSACTION_SERVICE_URL:http://localhost:8084}
+          uri: lb://TRANSACTION-SERVICE
           predicates:
             - Path=/api/transactions/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
 
 management:
   endpoints:
