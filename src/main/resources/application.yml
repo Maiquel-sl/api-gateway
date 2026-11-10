@@ -1,0 +1,38 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # 1. Customer Service Route
+        - id: customer-service-route
+          uri: ${CUSTOMER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/customers/**
+
+        # 2. Account Service Route
+        - id: account-service-route
+          uri: ${ACCOUNT_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/accounts/**
+
+        # 3. Credit Service Route
+        - id: credit-service-route
+          uri: ${CREDIT_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/credits/**
+
+        # 4. Transaction Service Route
+        - id: transaction-service-route
+          uri: ${TRANSACTION_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/transactions/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, gateway
