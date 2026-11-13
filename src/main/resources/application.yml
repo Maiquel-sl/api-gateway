@@ -9,6 +9,10 @@ spring:
       server:
         webflux:
           routes:
+            # ==========================================
+            # RUTAS DE NEGOCIO (APIs)
+            # ==========================================
+
             # 1. Customer Service Route
             - id: "customer-service-route"
               uri: "lb://CUSTOMER-SERVICE"
@@ -52,6 +56,55 @@ spring:
                   args:
                     name: "bankServiceCB"
                     fallbackUri: "forward:/fallback/transactions"
+            
+            # ==========================================
+            # RUTAS PARA DESCARGAR LOS CONTRATOS OPENAPI
+            # ==========================================
+            
+            # 1. Customer Service Route
+            - id: customer-openapi-yaml
+              uri: lb://CUSTOMER-SERVICE
+              predicates:
+                - Path=/docs/customer-openapi.yml
+              filters:
+                - SetPath=/customer-openapi.yml
+            # 2. Account Service Route
+            - id: account-openapi-yaml
+              uri: lb://ACCOUNT-SERVICE
+              predicates:
+                - Path=/docs/account-openapi.yml
+              filters:
+                - SetPath=/account-openapi.yml
+            # 3. Credit Service Route
+            - id: credit-openapi-yaml
+              uri: lb://CREDIT-SERVICE
+              predicates:
+                - Path=/docs/credit-openapi.yml
+              filters:
+                - SetPath=/credit-openapi.yml
+            # 4. Transaction Service Route
+            - id: transaction-openapi-yaml  
+              uri: lb://TRANSACTION-SERVICE
+              predicates:
+                - Path=/docs/transaction-openapi.yml
+              filters:
+                - SetPath=/transaction-openapi.yml
+
+# ==========================================
+# CONFIGURACIÓN DE SWAGGER UI CENTRALIZADO
+# ==========================================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Customer Service
+        url: /docs/customer-openapi.yml
+      - name: Account Service
+        url: /docs/account-openapi.yml
+      - name: Credit Service
+        url: /docs/credit-openapi.yml
+      - name: Transaction Service
+        url: /docs/transaction-openapi.yml
 
 eureka:
   client:
